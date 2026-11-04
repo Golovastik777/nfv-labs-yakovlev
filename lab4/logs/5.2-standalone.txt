@@ -1,0 +1,29 @@
+$ docker exec clab-yakovlev-l4-s1 ovs-vsctl set-fail-mode br0 standalone
+$ docker exec clab-yakovlev-l4-s2 ovs-vsctl set-fail-mode br0 standalone
+$ docker exec clab-yakovlev-l4-s2 ovs-ofctl -O OpenFlow13 dump-flows br0
+OFPST_FLOW reply (OF1.3) (xid=0x2):
+$ docker exec clab-yakovlev-l4-s2 ovs-appctl bridge/dump-flows br0   # включая скрытые
+duration=30s, n_packets=2, n_bytes=140, priority=15790320,actions=NORMAL
+table_id=254, duration=227s, n_packets=0, n_bytes=0, priority=2,recirc_id=0,actions=drop
+table_id=254, duration=227s, n_packets=0, n_bytes=0, priority=0,reg0=0x1,actions=controller(reason=)
+table_id=254, duration=227s, n_packets=15, n_bytes=1226, priority=0,reg0=0x2,actions=drop
+table_id=254, duration=227s, n_packets=0, n_bytes=0, priority=0,reg0=0x3,actions=drop
+$ docker exec clab-yakovlev-l4-s2 grep -i "failing open" /var/log/openvswitch/ovs-vswitchd.log
+2026-11-04T10:41:03.339Z|00074|fail_open|WARN|Could not connect to controller (or switch failed controller's post-connection admission control policy) for 37 seconds, failing open
+$ docker exec clab-yakovlev-l4-h2 ping -c 3 10.7.4.3
+PING 10.7.4.3 (10.7.4.3) 56(84) bytes of data.
+64 bytes from 10.7.4.3: icmp_seq=1 ttl=64 time=0.922 ms
+64 bytes from 10.7.4.3: icmp_seq=2 ttl=64 time=1.07 ms
+64 bytes from 10.7.4.3: icmp_seq=3 ttl=64 time=1.23 ms
+
+--- 10.7.4.3 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2002ms
+rtt min/avg/max/mdev = 0.922/1.073/1.228/0.124 ms
+$ docker exec clab-yakovlev-l4-h1 ping -c 2 10.7.4.2
+2 packets transmitted, 2 received, 0% packet loss, time 1001ms
+rtt min/avg/max/mdev = 1.195/1.281/1.368/0.086 ms
+$ docker exec clab-yakovlev-l4-s2 ovs-appctl fdb/show br0
+ port  VLAN  MAC                Age
+    2     0  aa:c1:ab:d1:5f:20    1
+    1     0  aa:c1:ab:c6:f2:d3    1
+    3     0  aa:c1:ab:05:c0:7c    1

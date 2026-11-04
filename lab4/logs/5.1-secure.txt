@@ -1,0 +1,23 @@
+$ docker stop clab-yakovlev-l4-odl
+clab-yakovlev-l4-odl
+$ docker exec clab-yakovlev-l4-s1 ovs-vsctl show | grep -A1 Controller
+        Controller "tcp:10.104.7.100:6653"
+        fail_mode: secure
+$ docker exec clab-yakovlev-l4-h1 ping -c 3 10.7.4.2
+3 packets transmitted, 3 received, 0% packet loss, time 2013ms
+rtt min/avg/max/mdev = 0.902/1.192/1.341/0.205 ms
+$ docker exec clab-yakovlev-l4-h1 ping -c 2 10.7.4.3
+2 packets transmitted, 2 received, 0% packet loss, time 1048ms
+rtt min/avg/max/mdev = 0.679/0.904/1.130/0.225 ms
+$ docker exec clab-yakovlev-l4-h2 ping -c 2 -W 1 10.7.4.3
+2 packets transmitted, 0 received, 100% packet loss, time 1037ms
+
+$ docker exec clab-yakovlev-l4-s2 ovs-ofctl -O OpenFlow13 dump-flows br0
+OFPST_FLOW reply (OF1.3) (xid=0x2):
+ cookie=0x0, duration=85.339s, table=0, n_packets=11, n_bytes=854, priority=200,in_port=1 actions=output:2
+ cookie=0x0, duration=85.339s, table=0, n_packets=10, n_bytes=1733, priority=200,in_port=3 actions=output:2
+ cookie=0x0, duration=85.339s, table=0, n_packets=1, n_bytes=42, priority=200,arp,in_port=2,arp_tpa=10.7.4.3 actions=output:3
+ cookie=0x0, duration=85.339s, table=0, n_packets=3, n_bytes=126, priority=200,arp,in_port=2,arp_tpa=10.7.4.2 actions=output:1
+ cookie=0x0, duration=85.339s, table=0, n_packets=7, n_bytes=686, priority=200,ip,in_port=2,nw_dst=10.7.4.2 actions=output:1
+ cookie=0x0, duration=85.339s, table=0, n_packets=10, n_bytes=873, priority=200,ip,in_port=2,nw_dst=10.7.4.3 actions=output:3
+ cookie=0xa, duration=85.315s, table=0, n_packets=12, n_bytes=1020, send_flow_rem priority=0 actions=CONTROLLER:65535

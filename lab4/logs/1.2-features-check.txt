@@ -1,0 +1,7 @@
+$ feature:list -i | grep ...
+odl-openflowplugin-app-table-miss-enforcer                      | 1.0.0            | x        | Started | odl-openflowplugin-app-table-miss-enforcer                      | OpenDaylight :: Openflow Plugin :: Application -
+odl-openflowplugin-flow-services-rest                           | 1.0.0            | x        | Started | odl-openflowplugin-flow-services-rest                           | OpenDaylight :: Openflow Plugin :: Flow Services
+odl-restconf-openapi                                            | 11.0.0           | x        | Started | odl-netconf-11.0.0                                              | OpenDaylight :: RESTCONF :: OPENAPI
+$ проверка портов
+6653 open
+8181 open

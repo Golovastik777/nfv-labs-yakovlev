@@ -1,0 +1,28 @@
+$ docker exec -i -e DPID=1 -e ODL_IP=10.104.7.100 clab-yakovlev-l4-s1 sh < scripts/ovs-setup.sh
+ea8283ea-eb17-46ae-baf0-37d12c185934
+    Bridge br0
+        Controller "tcp:10.104.7.100:6653"
+        fail_mode: secure
+        datapath_type: netdev
+        Port br0
+            Interface br0
+                type: internal
+        Port eth1
+            Interface eth1
+        Port eth2
+            Interface eth2
+$ docker exec -i -e DPID=2 -e ODL_IP=10.104.7.100 clab-yakovlev-l4-s2 sh < scripts/ovs-setup.sh
+947a91da-0713-41c2-a052-50df35cfd772
+    Bridge br0
+        Controller "tcp:10.104.7.100:6653"
+        fail_mode: secure
+        datapath_type: netdev
+        Port eth1
+            Interface eth1
+        Port br0
+            Interface br0
+                type: internal
+        Port eth2
+            Interface eth2
+        Port eth3
+            Interface eth3

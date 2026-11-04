@@ -1,0 +1,12 @@
+$ scripts/push-flows.sh "s*"
+PUT    openflow:1 yakovlev-s1-1to2           201
+PUT    openflow:1 yakovlev-s1-2to1           201
+PUT    openflow:2 yakovlev-s2-1to2           201
+PUT    openflow:2 yakovlev-s2-3to2           201
+PUT    openflow:2 yakovlev-s2-to-h2-arp      201
+PUT    openflow:2 yakovlev-s2-to-h2-ip       201
+PUT    openflow:2 yakovlev-s2-to-h3-arp      201
+PUT    openflow:2 yakovlev-s2-to-h3-ip       201
+(exit 0)
+$ put_flow 1 yakovlev-s1-1to2 flows/s1-1to2.json   # повторный PUT
+PUT yakovlev-s1-1to2: 204

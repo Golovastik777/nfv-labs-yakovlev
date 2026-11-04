@@ -1,0 +1,28 @@
+$ odl_get "opendaylight-inventory:nodes/node=openflow%3A1/flow-node-inventory:table=0/flow=yakovlev-acl-icmp-h3/opendaylight-flow-statistics:flow-statistics?content=nonconfig"
+{
+  "opendaylight-flow-statistics:flow-statistics": {
+    "packet-count": "2",
+    "byte-count": "196",
+    "duration": {
+      "second": 17,
+      "nanosecond": 690000000
+    }
+  }
+}
+$ docker exec clab-yakovlev-l4-s1 ovs-ofctl -O OpenFlow13 dump-flows br0 | grep drop
+ cookie=0x0, duration=18.628s, table=0, n_packets=2, n_bytes=196, priority=507,icmp,in_port=1,nw_dst=10.7.4.3 actions=drop
+$ del_flow 1 yakovlev-acl-icmp-h3
+DELETE yakovlev-acl-icmp-h3: 204
+$ docker exec clab-yakovlev-l4-h1 ping -c 2 10.7.4.3   # снова проходит
+PING 10.7.4.3 (10.7.4.3) 56(84) bytes of data.
+64 bytes from 10.7.4.3: icmp_seq=1 ttl=64 time=1.60 ms
+64 bytes from 10.7.4.3: icmp_seq=2 ttl=64 time=1.46 ms
+
+--- 10.7.4.3 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1002ms
+rtt min/avg/max/mdev = 1.455/1.528/1.602/0.073 ms
+$ docker exec clab-yakovlev-l4-s1 ovs-ofctl -O OpenFlow13 dump-flows br0
+OFPST_FLOW reply (OF1.3) (xid=0x2):
+ cookie=0x0, duration=113.668s, table=0, n_packets=50, n_bytes=4822, priority=200,in_port=2 actions=output:1
+ cookie=0x0, duration=113.546s, table=0, n_packets=27, n_bytes=2119, priority=200,in_port=1 actions=output:2
+ cookie=0xa, duration=140.463s, table=0, n_packets=11, n_bytes=776, send_flow_rem priority=0 actions=CONTROLLER:65535

@@ -1,0 +1,20 @@
+$ scripts/push-flows.sh acl-icmp-h3
+PUT    openflow:1 yakovlev-acl-icmp-h3       201
+$ docker exec -d clab-yakovlev-l4-h3 python3 -m http.server 8080
+$ docker exec clab-yakovlev-l4-h1 ping -c 2 -W 1 10.7.4.3   # не проходит
+PING 10.7.4.3 (10.7.4.3) 56(84) bytes of data.
+
+--- 10.7.4.3 ping statistics ---
+2 packets transmitted, 0 received, 100% packet loss, time 1003ms
+
+(exit 1)
+$ docker exec clab-yakovlev-l4-h1 curl -s -o /dev/null -w "%{http_code}\n" http://10.7.4.3:8080/   # 200
+200
+$ docker exec clab-yakovlev-l4-h1 ping -c 2 10.7.4.2   # проходит
+PING 10.7.4.2 (10.7.4.2) 56(84) bytes of data.
+64 bytes from 10.7.4.2: icmp_seq=1 ttl=64 time=1.03 ms
+64 bytes from 10.7.4.2: icmp_seq=2 ttl=64 time=3.61 ms
+
+--- 10.7.4.2 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1001ms
+rtt min/avg/max/mdev = 1.027/2.320/3.613/1.293 ms

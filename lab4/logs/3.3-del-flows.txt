@@ -1,0 +1,24 @@
+$ docker exec clab-yakovlev-l4-s2 ovs-ofctl -O OpenFlow13 del-flows br0
+$ docker exec clab-yakovlev-l4-s2 ovs-ofctl -O OpenFlow13 dump-flows br0
+OFPST_FLOW reply (OF1.3) (xid=0x2):
+$ docker exec clab-yakovlev-l4-h1 ping -c 2 -W 1 10.7.4.2
+2 packets transmitted, 0 received, 100% packet loss, time 1003ms
+
+# через 30 с:
+config:      ["yakovlev-s2-1to2","yakovlev-s2-to-h3-arp","yakovlev-s2-to-h2-arp","yakovlev-s2-3to2","yakovlev-s2-to-h2-ip","yakovlev-s2-to-h3-ip"]
+operational: []
+$ docker exec clab-yakovlev-l4-s2 ovs-ofctl -O OpenFlow13 dump-flows br0
+OFPST_FLOW reply (OF1.3) (xid=0x2):
+$ docker exec clab-yakovlev-l4-s2 sh -c "ovs-vsctl del-controller br0 && ovs-vsctl set-controller br0 tcp:10.104.7.100:6653"
+$ docker exec clab-yakovlev-l4-s2 ovs-ofctl -O OpenFlow13 dump-flows br0
+OFPST_FLOW reply (OF1.3) (xid=0x2):
+ cookie=0x0, duration=9.395s, table=0, n_packets=0, n_bytes=0, priority=200,in_port=1 actions=output:2
+ cookie=0x0, duration=9.395s, table=0, n_packets=0, n_bytes=0, priority=200,in_port=3 actions=output:2
+ cookie=0x0, duration=9.395s, table=0, n_packets=0, n_bytes=0, priority=200,arp,in_port=2,arp_tpa=10.7.4.3 actions=output:3
+ cookie=0x0, duration=9.395s, table=0, n_packets=0, n_bytes=0, priority=200,arp,in_port=2,arp_tpa=10.7.4.2 actions=output:1
+ cookie=0x0, duration=9.395s, table=0, n_packets=0, n_bytes=0, priority=200,ip,in_port=2,nw_dst=10.7.4.2 actions=output:1
+ cookie=0x0, duration=9.395s, table=0, n_packets=0, n_bytes=0, priority=200,ip,in_port=2,nw_dst=10.7.4.3 actions=output:3
+ cookie=0xa, duration=9.371s, table=0, n_packets=2, n_bytes=170, send_flow_rem priority=0 actions=CONTROLLER:65535
+$ docker exec clab-yakovlev-l4-h1 ping -c 2 10.7.4.2
+2 packets transmitted, 2 received, 0% packet loss, time 1001ms
+rtt min/avg/max/mdev = 1.377/1.569/1.761/0.192 ms

@@ -1,0 +1,62 @@
+$ docker exec clab-yakovlev-l4-s1 ovs-vsctl show | grep -A1 Controller
+        Controller "tcp:10.104.7.100:6653"
+            is_connected: true
+$ docker exec clab-yakovlev-l4-s1 ovs-ofctl -O OpenFlow13 show br0
+OFPT_FEATURES_REPLY (OF1.3) (xid=0x2): dpid:0000000000000001
+n_tables:254, n_buffers:0
+capabilities: FLOW_STATS TABLE_STATS PORT_STATS GROUP_STATS QUEUE_STATS
+OFPST_PORT_DESC reply (OF1.3) (xid=0x3):
+ 1(eth1): addr:aa:c1:ab:05:a1:9e
+     config:     0
+     state:      LIVE
+     current:    10GB-FD COPPER
+     speed: 10000 Mbps now, 0 Mbps max
+ 2(eth2): addr:aa:c1:ab:a7:7f:97
+     config:     0
+     state:      LIVE
+     current:    10GB-FD COPPER
+     speed: 10000 Mbps now, 0 Mbps max
+ LOCAL(br0): addr:06:c8:68:2e:14:41
+     config:     PORT_DOWN
+     state:      LINK_DOWN
+     current:    10GB-FD COPPER
+     speed: 10000 Mbps now, 0 Mbps max
+OFPT_GET_CONFIG_REPLY (OF1.3) (xid=0x5): frags=normal miss_send_len=0
+$ docker exec clab-yakovlev-l4-s1 ovs-ofctl -O OpenFlow13 dump-flows br0
+OFPST_FLOW reply (OF1.3) (xid=0x2):
+ cookie=0xa, duration=7.380s, table=0, n_packets=3, n_bytes=255, send_flow_rem priority=0 actions=CONTROLLER:65535
+$ docker exec clab-yakovlev-l4-s2 ovs-vsctl show | grep -A1 Controller
+        Controller "tcp:10.104.7.100:6653"
+            is_connected: true
+$ docker exec clab-yakovlev-l4-s2 ovs-ofctl -O OpenFlow13 show br0
+OFPT_FEATURES_REPLY (OF1.3) (xid=0x2): dpid:0000000000000002
+n_tables:254, n_buffers:0
+capabilities: FLOW_STATS TABLE_STATS PORT_STATS GROUP_STATS QUEUE_STATS
+OFPST_PORT_DESC reply (OF1.3) (xid=0x3):
+ 1(eth1): addr:aa:c1:ab:b5:99:2a
+     config:     0
+     state:      LIVE
+     current:    10GB-FD COPPER
+     speed: 10000 Mbps now, 0 Mbps max
+ 2(eth2): addr:aa:c1:ab:11:3d:80
+     config:     0
+     state:      LIVE
+     current:    10GB-FD COPPER
+     speed: 10000 Mbps now, 0 Mbps max
+ 3(eth3): addr:aa:c1:ab:ea:29:9c
+     config:     0
+     state:      LIVE
+     current:    10GB-FD COPPER
+     speed: 10000 Mbps now, 0 Mbps max
+ LOCAL(br0): addr:66:c7:bb:a5:89:42
+     config:     PORT_DOWN
+     state:      LINK_DOWN
+     current:    10GB-FD COPPER
+     speed: 10000 Mbps now, 0 Mbps max
+OFPT_GET_CONFIG_REPLY (OF1.3) (xid=0x5): frags=normal miss_send_len=0
+$ docker exec clab-yakovlev-l4-s2 ovs-ofctl -O OpenFlow13 dump-flows br0
+OFPST_FLOW reply (OF1.3) (xid=0x2):
+ cookie=0xa, duration=7.505s, table=0, n_packets=4, n_bytes=325, send_flow_rem priority=0 actions=CONTROLLER:65535
+$ odl_get "opendaylight-inventory:nodes?content=nonconfig&depth=3" | jq ".\"opendaylight-inventory:nodes\".node[].id"
+"openflow:1"
+"openflow:2"
