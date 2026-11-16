@@ -1,0 +1,95 @@
+$ docker exec clab-$STUDENT-l6-client1 ping -c 3 10.$N.6.100
+PING 10.7.6.100 (10.7.6.100) 56(84) bytes of data.
+64 bytes from 10.7.6.100: icmp_seq=1 ttl=64 time=3.10 ms
+64 bytes from 10.7.6.100: icmp_seq=2 ttl=64 time=1.13 ms
+64 bytes from 10.7.6.100: icmp_seq=3 ttl=64 time=1.25 ms
+
+--- 10.7.6.100 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2004ms
+rtt min/avg/max/mdev = 1.126/1.822/3.095/0.901 ms
+$ docker exec clab-$STUDENT-l6-client1 curl -s -o /dev/null -w "%{http_code}\n" http://10.$N.6.100/
+200
+$ docker exec clab-$STUDENT-l6-client1 curl -s -m 3 -o /dev/null -w "%{http_code}\n" http://10.$N.6.100:$((8000 + N))/
+000
+(exit 28)
+$ docker exec clab-$STUDENT-l6-fw1 nft list ruleset | grep counter
+		ip protocol tcp tcp dport 8007 counter packets 3 bytes 180 drop comment "block tcp/8007"
+		ip protocol tcp tcp dport 80 counter packets 6 bytes 394 accept comment "allow http"
+		ip protocol icmp counter packets 6 bytes 504 accept comment "allow icmp"
+		counter packets 17 bytes 1995 comment "other"
+$ docker exec clab-$STUDENT-l6-client1 iperf3 -c 10.$N.6.100 -t 5
+Connecting to host 10.7.6.100, port 5201
+[  5] local 10.7.6.11 port 44618 connected to 10.7.6.100 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec   256 KBytes  2.09 Mbits/sec    3   9.23 KBytes       
+[  5]   1.00-2.00   sec  0.00 Bytes  0.00 bits/sec    1   9.23 KBytes       
+[  5]   2.00-3.00   sec  0.00 Bytes  0.00 bits/sec    0   9.23 KBytes       
+[  5]   3.00-4.00   sec  0.00 Bytes  0.00 bits/sec    1   9.23 KBytes       
+[  5]   4.00-5.00   sec  0.00 Bytes  0.00 bits/sec    0   9.23 KBytes       
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-5.00   sec   256 KBytes   419 Kbits/sec    5            sender
+[  5]   0.00-5.00   sec  0.00 Bytes  0.00 bits/sec                  receiver
+
+iperf Done.
+$ docker exec clab-$STUDENT-l6-client1 iperf3 -c 10.$N.6.100 -t 5 -R
+Connecting to host 10.7.6.100, port 5201
+Reverse mode, remote host 10.7.6.100 is sending
+[  5] local 10.7.6.11 port 44638 connected to 10.7.6.100 port 5201
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-1.00   sec   168 MBytes  1.41 Gbits/sec                  
+[  5]   1.00-2.00   sec   239 MBytes  2.00 Gbits/sec                  
+[  5]   2.00-3.00   sec   260 MBytes  2.18 Gbits/sec                  
+[  5]   3.00-4.00   sec   240 MBytes  2.01 Gbits/sec                  
+[  5]   4.00-5.00   sec   160 MBytes  1.34 Gbits/sec                  
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-5.00   sec  1.04 GBytes  1.79 Gbits/sec  1737            sender
+[  5]   0.00-5.00   sec  1.04 GBytes  1.79 Gbits/sec                  receiver
+
+iperf Done.
+$ docker exec clab-$STUDENT-l6-client2 ping -c 2 10.$N.6.100
+PING 10.7.6.100 (10.7.6.100) 56(84) bytes of data.
+64 bytes from 10.7.6.100: icmp_seq=1 ttl=64 time=5.22 ms
+64 bytes from 10.7.6.100: icmp_seq=2 ttl=64 time=0.836 ms
+
+--- 10.7.6.100 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1001ms
+rtt min/avg/max/mdev = 0.836/3.026/5.217/2.190 ms
+$ docker exec clab-$STUDENT-l6-client2 curl -s -o /dev/null -w "%{http_code}\n" http://10.$N.6.100/
+200
+$ python3 nfvo.py show vnffg.yaml
+#UF$TABLE*0-1                prio=0 in=*              pkts=94
+sfc-yakovlev-c1-fwd0-arp     prio=300 in=1              pkts=1
+sfc-yakovlev-c1-fwd0-ip      prio=300 in=1              pkts=32306
+sfc-yakovlev-c1-fwd1-arp     prio=300 in=4              pkts=1
+sfc-yakovlev-c1-fwd1-ip      prio=300 in=4              pkts=32303
+sfc-yakovlev-c1-fwd2-arp     prio=300 in=8              pkts=1
+sfc-yakovlev-c1-fwd2-ip      prio=300 in=8              pkts=32290
+sfc-yakovlev-c1-rev0-arp     prio=300 in=9              pkts=1
+sfc-yakovlev-c1-rev0-ip      prio=300 in=9              pkts=119473
+sfc-yakovlev-c1-rev1-arp     prio=300 in=7              pkts=1
+sfc-yakovlev-c1-rev1-ip      prio=300 in=7              pkts=118368
+sfc-yakovlev-c1-rev2-arp     prio=300 in=3              pkts=1
+sfc-yakovlev-c1-rev2-ip      prio=300 in=3              pkts=118368
+sfc-yakovlev-c2-fwd0-arp     prio=300 in=2              pkts=1
+sfc-yakovlev-c2-fwd0-ip      prio=300 in=2              pkts=8
+sfc-yakovlev-c2-fwd1-arp     prio=300 in=4              pkts=1
+sfc-yakovlev-c2-fwd1-ip      prio=300 in=4              pkts=8
+sfc-yakovlev-c2-fwd2-arp     prio=300 in=8              pkts=1
+sfc-yakovlev-c2-fwd2-ip      prio=300 in=8              pkts=8
+sfc-yakovlev-c2-rev0-arp     prio=300 in=9              pkts=1
+sfc-yakovlev-c2-rev0-ip      prio=300 in=9              pkts=7
+sfc-yakovlev-c2-rev1-arp     prio=300 in=7              pkts=1
+sfc-yakovlev-c2-rev1-ip      prio=300 in=7              pkts=7
+sfc-yakovlev-c2-rev2-arp     prio=300 in=3              pkts=1
+sfc-yakovlev-c2-rev2-ip      prio=300 in=3              pkts=7
+# Диагностика: прямой iperf3 0 бит/с. MTU интерфейсов и счётчик dropped у tbf
+$ docker exec clab-yakovlev-l6-client1 cat /sys/class/net/eth1/mtu
+9500
+$ docker exec clab-yakovlev-l6-server cat /sys/class/net/eth1/mtu
+9500
+$ docker exec clab-yakovlev-l6-shaper1 tc -s qdisc show dev eth2
+qdisc tbf 8001: root refcnt 5 rate 17Mbit burst 4Kb lat 400ms 
+ Sent 2174241 bytes 32358 pkt (dropped 29, overlimits 0 requeues 0) 
+ backlog 0b 0p requeues 0

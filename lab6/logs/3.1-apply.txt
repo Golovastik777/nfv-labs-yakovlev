@@ -1,0 +1,27 @@
+$ python3 nfvo.py apply vnffg.yaml
+applied: 24 flows, removed stale: 0
+$ docker exec clab-$STUDENT-l6-sw ovs-ofctl -O OpenFlow13 dump-flows br0 | grep "priority=300" | sort
+ cookie=0x0, duration=0.076s, table=0, n_packets=0, n_bytes=0, priority=300,arp,in_port=3,arp_tpa=10.7.6.12 actions=output:2
+ cookie=0x0, duration=0.083s, table=0, n_packets=0, n_bytes=0, priority=300,ip,in_port=3,nw_dst=10.7.6.12 actions=output:2
+ cookie=0x0, duration=0.088s, table=0, n_packets=0, n_bytes=0, priority=300,arp,in_port=7,arp_tpa=10.7.6.12 actions=output:4
+ cookie=0x0, duration=0.094s, table=0, n_packets=0, n_bytes=0, priority=300,ip,in_port=7,nw_dst=10.7.6.12 actions=output:4
+ cookie=0x0, duration=0.099s, table=0, n_packets=0, n_bytes=0, priority=300,arp,in_port=9,arp_tpa=10.7.6.12 actions=output:8
+ cookie=0x0, duration=0.105s, table=0, n_packets=0, n_bytes=0, priority=300,ip,in_port=9,nw_dst=10.7.6.12 actions=output:8
+ cookie=0x0, duration=0.113s, table=0, n_packets=0, n_bytes=0, priority=300,arp,in_port=8,arp_spa=10.7.6.12 actions=output:9
+ cookie=0x0, duration=0.119s, table=0, n_packets=0, n_bytes=0, priority=300,ip,in_port=8,nw_src=10.7.6.12 actions=output:9
+ cookie=0x0, duration=0.126s, table=0, n_packets=0, n_bytes=0, priority=300,arp,in_port=4,arp_spa=10.7.6.12 actions=output:7
+ cookie=0x0, duration=0.137s, table=0, n_packets=0, n_bytes=0, priority=300,ip,in_port=4,nw_src=10.7.6.12 actions=output:7
+ cookie=0x0, duration=0.147s, table=0, n_packets=0, n_bytes=0, priority=300,arp,in_port=2,arp_spa=10.7.6.12 actions=output:3
+ cookie=0x0, duration=0.155s, table=0, n_packets=0, n_bytes=0, priority=300,ip,in_port=2,nw_src=10.7.6.12 actions=output:3
+ cookie=0x0, duration=0.170s, table=0, n_packets=0, n_bytes=0, priority=300,arp,in_port=3,arp_tpa=10.7.6.11 actions=output:1
+ cookie=0x0, duration=0.181s, table=0, n_packets=0, n_bytes=0, priority=300,ip,in_port=3,nw_dst=10.7.6.11 actions=output:1
+ cookie=0x0, duration=0.186s, table=0, n_packets=0, n_bytes=0, priority=300,arp,in_port=7,arp_tpa=10.7.6.11 actions=output:4
+ cookie=0x0, duration=0.190s, table=0, n_packets=0, n_bytes=0, priority=300,ip,in_port=7,nw_dst=10.7.6.11 actions=output:4
+ cookie=0x0, duration=0.198s, table=0, n_packets=0, n_bytes=0, priority=300,arp,in_port=9,arp_tpa=10.7.6.11 actions=output:8
+ cookie=0x0, duration=0.207s, table=0, n_packets=0, n_bytes=0, priority=300,ip,in_port=9,nw_dst=10.7.6.11 actions=output:8
+ cookie=0x0, duration=0.213s, table=0, n_packets=0, n_bytes=0, priority=300,arp,in_port=1,arp_spa=10.7.6.11 actions=output:3
+ cookie=0x0, duration=0.213s, table=0, n_packets=0, n_bytes=0, priority=300,arp,in_port=4,arp_spa=10.7.6.11 actions=output:7
+ cookie=0x0, duration=0.213s, table=0, n_packets=0, n_bytes=0, priority=300,arp,in_port=8,arp_spa=10.7.6.11 actions=output:9
+ cookie=0x0, duration=0.217s, table=0, n_packets=0, n_bytes=0, priority=300,ip,in_port=1,nw_src=10.7.6.11 actions=output:3
+ cookie=0x0, duration=0.217s, table=0, n_packets=0, n_bytes=0, priority=300,ip,in_port=4,nw_src=10.7.6.11 actions=output:7
+ cookie=0x0, duration=0.217s, table=0, n_packets=0, n_bytes=0, priority=300,ip,in_port=8,nw_src=10.7.6.11 actions=output:9

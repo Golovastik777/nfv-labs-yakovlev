@@ -1,0 +1,37 @@
+$ docker exec -i -e ODL_IP=10.106.$N.100 clab-$STUDENT-l6-sw sh < scripts/sw-setup.sh
+ 1(eth1): addr:aa:c1:ab:9d:10:35
+ 2(eth2): addr:aa:c1:ab:bc:93:c5
+ 3(eth3): addr:aa:c1:ab:d1:a1:32
+ 4(eth4): addr:aa:c1:ab:37:13:57
+ 7(eth7): addr:aa:c1:ab:fd:d8:79
+ 8(eth8): addr:aa:c1:ab:30:57:12
+ 9(eth9): addr:aa:c1:ab:2f:b7:74
+$ docker exec clab-$STUDENT-l6-sw ovs-vsctl show
+8c63e636-11a6-44a2-b031-65d0483a6a5d
+    Bridge br0
+        Controller "tcp:10.106.7.100:6653"
+            is_connected: true
+        fail_mode: secure
+        datapath_type: netdev
+        Port eth8
+            Interface eth8
+        Port eth1
+            Interface eth1
+        Port eth4
+            Interface eth4
+        Port eth9
+            Interface eth9
+        Port br0
+            Interface br0
+                type: internal
+        Port eth3
+            Interface eth3
+        Port eth7
+            Interface eth7
+        Port eth2
+            Interface eth2
+$ docker exec clab-$STUDENT-l6-sw ovs-ofctl -O OpenFlow13 dump-flows br0
+OFPST_FLOW reply (OF1.3) (xid=0x2):
+ cookie=0xa, duration=18.987s, table=0, n_packets=7, n_bytes=490, send_flow_rem priority=0 actions=CONTROLLER:65535
+$ odl_get "opendaylight-inventory:nodes?content=nonconfig&depth=3" | jq -c "[.\"opendaylight-inventory:nodes\".node[].id]"
+["openflow:1"]

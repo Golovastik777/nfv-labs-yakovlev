@@ -1,0 +1,86 @@
+$ docker exec clab-$STUDENT-l6-client1 ping -c 3 10.$N.6.100
+PING 10.7.6.100 (10.7.6.100) 56(84) bytes of data.
+64 bytes from 10.7.6.100: icmp_seq=1 ttl=64 time=1.97 ms
+64 bytes from 10.7.6.100: icmp_seq=2 ttl=64 time=1.04 ms
+64 bytes from 10.7.6.100: icmp_seq=3 ttl=64 time=0.755 ms
+
+--- 10.7.6.100 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 0.755/1.254/1.966/0.516 ms
+$ docker exec clab-$STUDENT-l6-client1 curl -s -o /dev/null -w "%{http_code}\n" http://10.$N.6.100/
+200
+$ docker exec clab-$STUDENT-l6-client1 curl -s -m 3 -o /dev/null -w "%{http_code}\n" http://10.$N.6.100:$((8000 + N))/
+000
+(exit 28)
+$ docker exec clab-$STUDENT-l6-fw1 nft list ruleset | grep counter
+		ip protocol tcp tcp dport 8007 counter packets 6 bytes 360 drop comment "block tcp/8007"
+		ip protocol tcp tcp dport 80 counter packets 18 bytes 1182 accept comment "allow http"
+		ip protocol icmp counter packets 16 bytes 1344 accept comment "allow icmp"
+		counter packets 152914 bytes 1138333927 comment "other"
+$ docker exec clab-$STUDENT-l6-client1 iperf3 -c 10.$N.6.100 -t 5
+Connecting to host 10.7.6.100, port 5201
+[  5] local 10.7.6.11 port 49346 connected to 10.7.6.100 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec  2.62 MBytes  22.0 Mbits/sec    1    314 KBytes       
+[  5]   1.00-2.00   sec  2.62 MBytes  22.0 Mbits/sec    0    415 KBytes       
+[  5]   2.00-3.00   sec  2.25 MBytes  18.9 Mbits/sec    0    517 KBytes       
+[  5]   3.00-4.00   sec  2.12 MBytes  17.8 Mbits/sec    0    618 KBytes       
+[  5]   4.00-5.00   sec  2.25 MBytes  18.9 Mbits/sec    0    729 KBytes       
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-5.00   sec  11.9 MBytes  19.9 Mbits/sec    1            sender
+[  5]   0.00-5.35   sec  10.6 MBytes  16.7 Mbits/sec                  receiver
+
+iperf Done.
+$ docker exec clab-$STUDENT-l6-client1 iperf3 -c 10.$N.6.100 -t 5 -R
+Connecting to host 10.7.6.100, port 5201
+Reverse mode, remote host 10.7.6.100 is sending
+[  5] local 10.7.6.11 port 44650 connected to 10.7.6.100 port 5201
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-1.00   sec   234 MBytes  1.96 Gbits/sec                  
+[  5]   1.00-2.00   sec   268 MBytes  2.25 Gbits/sec                  
+[  5]   2.00-3.00   sec   282 MBytes  2.36 Gbits/sec                  
+[  5]   3.00-4.00   sec   212 MBytes  1.77 Gbits/sec                  
+[  5]   4.00-5.00   sec   239 MBytes  2.01 Gbits/sec                  
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-5.00   sec  1.21 GBytes  2.07 Gbits/sec  1790            sender
+[  5]   0.00-5.00   sec  1.21 GBytes  2.07 Gbits/sec                  receiver
+
+iperf Done.
+$ docker exec clab-$STUDENT-l6-client2 ping -c 2 10.$N.6.100
+PING 10.7.6.100 (10.7.6.100) 56(84) bytes of data.
+64 bytes from 10.7.6.100: icmp_seq=1 ttl=64 time=1.40 ms
+64 bytes from 10.7.6.100: icmp_seq=2 ttl=64 time=1.70 ms
+
+--- 10.7.6.100 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1001ms
+rtt min/avg/max/mdev = 1.404/1.549/1.695/0.145 ms
+$ docker exec clab-$STUDENT-l6-client2 curl -s -o /dev/null -w "%{http_code}\n" http://10.$N.6.100/
+200
+$ python3 nfvo.py show vnffg.yaml
+#UF$TABLE*0-1                prio=0 in=*              pkts=215
+sfc-yakovlev-c1-fwd0-arp     prio=300 in=1              pkts=2
+sfc-yakovlev-c1-fwd0-ip      prio=300 in=1              pkts=74285
+sfc-yakovlev-c1-fwd1-arp     prio=300 in=4              pkts=2
+sfc-yakovlev-c1-fwd1-ip      prio=300 in=4              pkts=74279
+sfc-yakovlev-c1-fwd2-arp     prio=300 in=8              pkts=2
+sfc-yakovlev-c1-fwd2-ip      prio=300 in=8              pkts=74250
+sfc-yakovlev-c1-rev0-arp     prio=300 in=9              pkts=2
+sfc-yakovlev-c1-rev0-ip      prio=300 in=9              pkts=259392
+sfc-yakovlev-c1-rev1-arp     prio=300 in=7              pkts=2
+sfc-yakovlev-c1-rev1-ip      prio=300 in=7              pkts=257106
+sfc-yakovlev-c1-rev2-arp     prio=300 in=3              pkts=2
+sfc-yakovlev-c1-rev2-ip      prio=300 in=3              pkts=257106
+sfc-yakovlev-c2-fwd0-arp     prio=300 in=2              pkts=1
+sfc-yakovlev-c2-fwd0-ip      prio=300 in=2              pkts=16
+sfc-yakovlev-c2-fwd1-arp     prio=300 in=4              pkts=1
+sfc-yakovlev-c2-fwd1-ip      prio=300 in=4              pkts=16
+sfc-yakovlev-c2-fwd2-arp     prio=300 in=8              pkts=1
+sfc-yakovlev-c2-fwd2-ip      prio=300 in=8              pkts=16
+sfc-yakovlev-c2-rev0-arp     prio=300 in=9              pkts=1
+sfc-yakovlev-c2-rev0-ip      prio=300 in=9              pkts=14
+sfc-yakovlev-c2-rev1-arp     prio=300 in=7              pkts=1
+sfc-yakovlev-c2-rev1-ip      prio=300 in=7              pkts=14
+sfc-yakovlev-c2-rev2-arp     prio=300 in=3              pkts=1
+sfc-yakovlev-c2-rev2-ip      prio=300 in=3              pkts=14

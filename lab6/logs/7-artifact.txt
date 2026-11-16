@@ -1,0 +1,32 @@
+========================================
+ЛР6 завершена: 16.11.2026 18:16:48
+Студент: igoryakovlev@colima, STUDENT=yakovlev, N=7
+========================================
+NAMES                      STATUS              vnf type
+clab-yakovlev-l6-fw2       Up About a minute   fw
+clab-yakovlev-l6-client1   Up 6 minutes        
+clab-yakovlev-l6-sw        Up 6 minutes        
+clab-yakovlev-l6-server    Up 6 minutes        
+clab-yakovlev-l6-client2   Up 6 minutes        
+clab-yakovlev-l6-odl       Up 6 minutes        
+clab-yakovlev-l6-shaper1   Up 6 minutes        shaper
+#UF$TABLE*0-1                prio=0 in=*              pkts=398
+sfc-yakovlev-c1-fwd0-arp     prio=300 in=1              pkts=7
+sfc-yakovlev-c1-fwd0-ip      prio=300 in=1              pkts=262933
+sfc-yakovlev-c1-fwd1-arp     prio=300 in=6              pkts=1
+sfc-yakovlev-c1-fwd1-ip      prio=300 in=6              pkts=188640
+sfc-yakovlev-c1-fwd2-arp     prio=300 in=8              pkts=4
+sfc-yakovlev-c1-fwd2-ip      prio=300 in=8              pkts=262882
+sfc-yakovlev-c1-rev0-arp     prio=300 in=9              pkts=4
+sfc-yakovlev-c1-rev0-ip      prio=300 in=9              pkts=890714
+sfc-yakovlev-c1-rev1-arp     prio=300 in=7              pkts=4
+sfc-yakovlev-c1-rev1-ip      prio=300 in=7              pkts=877878
+sfc-yakovlev-c1-rev2-arp     prio=300 in=5              pkts=1
+		ip protocol tcp tcp dport 8007 counter packets 3 bytes 180 drop comment "block tcp/8007"
+		ip protocol tcp tcp dport 80 counter packets 12 bytes 788 accept comment "allow http"
+		ip protocol icmp counter packets 12 bytes 1008 accept comment "allow icmp"
+		counter packets 809463 bytes 5907242559 comment "other"
+client1 HTTP: 200
+[  5]   0.00-3.25   sec  6.50 MBytes  16.8 Mbits/sec                  receiver
+
+iperf Done.

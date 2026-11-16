@@ -1,0 +1,15 @@
+$ docker exec clab-$STUDENT-l6-sw ovs-ofctl -O OpenFlow13 dump-flows br0   # до ping
+OFPST_FLOW reply (OF1.3) (xid=0x2):
+ cookie=0xa, duration=26.198s, table=0, n_packets=7, n_bytes=490, send_flow_rem priority=0 actions=CONTROLLER:65535
+$ docker exec clab-$STUDENT-l6-client1 ping -c 2 -W 1 10.$N.6.100
+PING 10.7.6.100 (10.7.6.100) 56(84) bytes of data.
+
+--- 10.7.6.100 ping statistics ---
+2 packets transmitted, 0 received, 100% packet loss, time 1022ms
+
+(exit 1)
+$ docker exec clab-$STUDENT-l6-sw ovs-ofctl -O OpenFlow13 dump-flows br0   # после ping
+OFPST_FLOW reply (OF1.3) (xid=0x2):
+ cookie=0xa, duration=28.281s, table=0, n_packets=9, n_bytes=574, send_flow_rem priority=0 actions=CONTROLLER:65535
+$ docker exec clab-$STUDENT-l6-client1 ip neigh
+10.7.6.100 dev eth1 INCOMPLETE 

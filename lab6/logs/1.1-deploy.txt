@@ -1,0 +1,58 @@
+$ containerlab deploy -t lab6.clab.yml
+15:10:47 INFO Containerlab started version=0.82.0
+15:10:47 INFO Parsing & checking topology file=lab6.clab.yml
+15:10:47 INFO Creating docker network name=clab-yakovlev-l6 IPv4 subnet=10.106.7.0/24 IPv6 subnet="" MTU=0
+15:10:47 INFO Creating lab directory path=/home/igoryakovlev.guest/nfv-labs-yakovlev/lab6/clab-yakovlev-l6
+15:10:47 INFO Creating container name=odl
+15:10:47 INFO Creating container name=shaper1
+15:10:47 INFO Creating container name=client2
+15:10:47 INFO Creating container name=fw1
+15:10:48 INFO Creating container name=server
+15:10:48 INFO Creating container name=sw
+15:10:48 INFO Creating container name=client1
+15:10:48 INFO Created link: client1:eth1 ▪┄┄▪ sw:eth1
+15:10:48 INFO Created link: client2:eth1 ▪┄┄▪ sw:eth2
+15:10:48 INFO Created link: fw1:eth1 ▪┄┄▪ sw:eth3
+15:10:48 INFO Created link: fw1:eth2 ▪┄┄▪ sw:eth4
+15:10:48 INFO Created link: shaper1:eth1 ▪┄┄▪ sw:eth7
+15:10:48 INFO Created link: shaper1:eth2 ▪┄┄▪ sw:eth8
+15:10:48 INFO Created link: server:eth1 ▪┄┄▪ sw:eth9
+15:10:48 INFO Executed command node=client2 command="ethtool -K eth1 tx off" stdout=""
+15:10:48 INFO Executed command node=client2 command="ip addr add 10.7.6.12/24 dev eth1" stdout=""
+15:10:48 INFO Executed command node=client1 command="ethtool -K eth1 tx off" stdout=""
+15:10:48 INFO Executed command node=server command="ethtool -K eth1 tx off" stdout=""
+15:10:48 INFO Executed command node=client1 command="ip addr add 10.7.6.11/24 dev eth1" stdout=""
+15:10:48 INFO Executed command node=server command="ip addr add 10.7.6.100/24 dev eth1" stdout=""
+15:10:48 INFO Adding host entries path=/etc/hosts
+15:10:48 INFO Adding SSH config for nodes path=/etc/ssh/ssh_config.d/clab-yakovlev-l6.conf
+15:10:48 INFO containerlab version
+  🎉=
+  │ A newer containerlab version (0.83.0) is available!
+  │ Release notes: https://containerlab.dev/rn/0.83/
+  │ Run 'clab version upgrade' or see https://containerlab.dev/install/ for other installation options.
+╭──────────────────────────┬────────────────┬─────────┬────────────────╮
+│           Name           │   Kind/Image   │  State  │ IPv4/6 Address │
+├──────────────────────────┼────────────────┼─────────┼────────────────┤
+│ clab-yakovlev-l6-client1 │ linux          │ running │ 10.106.7.4     │
+│                          │ lab-tools:1.0  │         │ N/A            │
+├──────────────────────────┼────────────────┼─────────┼────────────────┤
+│ clab-yakovlev-l6-client2 │ linux          │ running │ 10.106.7.5     │
+│                          │ lab-tools:1.0  │         │ N/A            │
+├──────────────────────────┼────────────────┼─────────┼────────────────┤
+│ clab-yakovlev-l6-fw1     │ linux          │ running │ 10.106.7.6     │
+│                          │ lab-tools:1.0  │         │ N/A            │
+├──────────────────────────┼────────────────┼─────────┼────────────────┤
+│ clab-yakovlev-l6-odl     │ linux          │ running │ 10.106.7.100   │
+│                          │ odl:chromium   │         │ N/A            │
+├──────────────────────────┼────────────────┼─────────┼────────────────┤
+│ clab-yakovlev-l6-server  │ linux          │ running │ 10.106.7.2     │
+│                          │ lab-tools:1.0  │         │ N/A            │
+├──────────────────────────┼────────────────┼─────────┼────────────────┤
+│ clab-yakovlev-l6-shaper1 │ linux          │ running │ 10.106.7.3     │
+│                          │ lab-tools:1.0  │         │ N/A            │
+├──────────────────────────┼────────────────┼─────────┼────────────────┤
+│ clab-yakovlev-l6-sw      │ linux          │ running │ 10.106.7.10    │
+│                          │ ovs-lab:latest │         │ N/A            │
+╰──────────────────────────┴────────────────┴─────────┴────────────────╯
+$ docker exec -d clab-$STUDENT-l6-server iperf3 -s
+$ docker exec -d clab-$STUDENT-l6-server python3 -m http.server $((8000 + N))

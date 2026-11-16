@@ -1,0 +1,41 @@
+$ python3 nfvo.py apply vnffg.yaml
+applied: 24 flows, removed stale: 0
+$ docker exec clab-$STUDENT-l6-sw ovs-ofctl -O OpenFlow13 dump-flows br0 | grep "priority=300" | grep 10.7.6.12
+ cookie=0x0, duration=0.146s, table=0, n_packets=16, n_bytes=1348, priority=300,ip,in_port=2,nw_src=10.7.6.12 actions=output:5
+ cookie=0x0, duration=0.141s, table=0, n_packets=1, n_bytes=42, priority=300,arp,in_port=2,arp_spa=10.7.6.12 actions=output:5
+ cookie=0x0, duration=0.117s, table=0, n_packets=0, n_bytes=0, priority=300,ip,in_port=6,nw_src=10.7.6.12 actions=output:7
+ cookie=0x0, duration=0.117s, table=0, n_packets=0, n_bytes=0, priority=300,arp,in_port=6,arp_spa=10.7.6.12 actions=output:7
+ cookie=0x0, duration=0.115s, table=0, n_packets=16, n_bytes=1348, priority=300,ip,in_port=8,nw_src=10.7.6.12 actions=output:9
+ cookie=0x0, duration=0.110s, table=0, n_packets=1, n_bytes=42, priority=300,arp,in_port=8,arp_spa=10.7.6.12 actions=output:9
+ cookie=0x0, duration=0.105s, table=0, n_packets=14, n_bytes=2990, priority=300,ip,in_port=9,nw_dst=10.7.6.12 actions=output:8
+ cookie=0x0, duration=0.098s, table=0, n_packets=1, n_bytes=42, priority=300,arp,in_port=9,arp_tpa=10.7.6.12 actions=output:8
+ cookie=0x0, duration=0.091s, table=0, n_packets=14, n_bytes=2990, priority=300,ip,in_port=7,nw_dst=10.7.6.12 actions=output:6
+ cookie=0x0, duration=0.083s, table=0, n_packets=1, n_bytes=42, priority=300,arp,in_port=7,arp_tpa=10.7.6.12 actions=output:6
+ cookie=0x0, duration=0.078s, table=0, n_packets=0, n_bytes=0, priority=300,ip,in_port=5,nw_dst=10.7.6.12 actions=output:2
+ cookie=0x0, duration=0.073s, table=0, n_packets=0, n_bytes=0, priority=300,arp,in_port=5,arp_tpa=10.7.6.12 actions=output:2
+# счётчики allow http до запроса client2
+$ docker exec clab-$STUDENT-l6-fw2 nft list ruleset | grep "allow http"
+		ip protocol tcp tcp dport 80 counter packets 0 bytes 0 accept comment "allow http"
+$ docker exec clab-$STUDENT-l6-fw1 nft list ruleset | grep "allow http"
+		ip protocol tcp tcp dport 80 counter packets 24 bytes 1576 accept comment "allow http"
+$ docker exec clab-$STUDENT-l6-client2 curl -s -o /dev/null -w "%{http_code}\n" http://10.$N.6.100/
+200
+$ docker exec clab-$STUDENT-l6-fw2 nft list ruleset | grep "allow http"     # счётчик растёт только на fw2
+		ip protocol tcp tcp dport 80 counter packets 6 bytes 394 accept comment "allow http"
+$ docker exec clab-$STUDENT-l6-fw1 nft list ruleset | grep "allow http"
+		ip protocol tcp tcp dport 80 counter packets 24 bytes 1576 accept comment "allow http"
+# client1 по-прежнему идёт через fw1
+$ docker exec clab-$STUDENT-l6-client1 curl -s -o /dev/null -w "%{http_code}\n" http://10.$N.6.100/
+200
+$ docker exec clab-$STUDENT-l6-fw1 nft list ruleset | grep "allow http"
+		ip protocol tcp tcp dport 80 counter packets 30 bytes 1970 accept comment "allow http"
+$ docker exec clab-$STUDENT-l6-fw2 nft list ruleset | grep "allow http"
+		ip protocol tcp tcp dport 80 counter packets 6 bytes 394 accept comment "allow http"
+$ docker exec clab-$STUDENT-l6-client2 curl -s -m 3 -o /dev/null -w "%{http_code}\n" http://10.$N.6.100:$((8000 + N))/
+000
+(exit 28)
+$ docker exec clab-$STUDENT-l6-fw2 nft list ruleset | grep counter
+		ip protocol tcp tcp dport 8007 counter packets 3 bytes 180 drop comment "block tcp/8007"
+		ip protocol tcp tcp dport 80 counter packets 6 bytes 394 accept comment "allow http"
+		ip protocol icmp counter packets 0 bytes 0 accept comment "allow icmp"
+		counter packets 26 bytes 2661 comment "other"

@@ -1,0 +1,69 @@
+$ ./vnfm.sh configure fw1 fw
+--- fw1
+eth1@if43        UP             aa:c1:ab:bc:2e:c5 <BROADCAST,MULTICAST,UP,LOWER_UP> 
+eth2@if47        UP             aa:c1:ab:a0:91:0b <BROADCAST,MULTICAST,UP,LOWER_UP> 
+table bridge vnf_fw {
+	chain forward {
+		type filter hook forward priority 0; policy accept;
+		ip protocol tcp tcp dport 8007 counter packets 0 bytes 0 drop comment "block tcp/8007"
+		ip protocol tcp tcp dport 80 counter packets 0 bytes 0 accept comment "allow http"
+		ip protocol icmp counter packets 0 bytes 0 accept comment "allow icmp"
+		counter packets 0 bytes 0 comment "other"
+	}
+}
+qdisc noqueue 0: root refcnt 2 
+$ ./vnfm.sh configure shaper1 shaper
+--- shaper1
+eth1@if41        UP             aa:c1:ab:72:5f:08 <BROADCAST,MULTICAST,UP,LOWER_UP> 
+eth2@if45        UP             aa:c1:ab:25:ef:da <BROADCAST,MULTICAST,UP,LOWER_UP> 
+table ip nat {
+	chain DOCKER_OUTPUT {
+		ip daddr 127.0.0.11 tcp dport 53 counter packets 0 bytes 0 xt target "DNAT"
+		ip daddr 127.0.0.11 udp dport 53 counter packets 0 bytes 0 xt target "DNAT"
+	}
+
+	chain OUTPUT {
+		type nat hook output priority dstnat; policy accept;
+		ip daddr 127.0.0.11 counter packets 0 bytes 0 jump DOCKER_OUTPUT
+	}
+
+	chain DOCKER_POSTROUTING {
+		ip saddr 127.0.0.11 tcp sport 33217 counter packets 0 bytes 0 xt target "SNAT"
+		ip saddr 127.0.0.11 udp sport 60698 counter packets 0 bytes 0 xt target "SNAT"
+	}
+
+	chain POSTROUTING {
+		type nat hook postrouting priority srcnat; policy accept;
+		ip daddr 127.0.0.11 counter packets 0 bytes 0 jump DOCKER_POSTROUTING
+	}
+qdisc tbf 8001: root refcnt 5 rate 17Mbit burst 4Kb lat 400ms 
+$ ./vnfm.sh list
+NAMES                      STATUS              vnf type
+clab-yakovlev-l6-client1   Up About a minute   
+clab-yakovlev-l6-sw        Up About a minute   
+clab-yakovlev-l6-server    Up About a minute   
+clab-yakovlev-l6-fw1       Up About a minute   fw
+clab-yakovlev-l6-client2   Up About a minute   
+clab-yakovlev-l6-odl       Up About a minute   
+clab-yakovlev-l6-shaper1   Up About a minute   shaper
+$ docker exec clab-$STUDENT-l6-fw1 nft list ruleset
+table bridge vnf_fw {
+	chain forward {
+		type filter hook forward priority 0; policy accept;
+		ip protocol tcp tcp dport 8007 counter packets 0 bytes 0 drop comment "block tcp/8007"
+		ip protocol tcp tcp dport 80 counter packets 0 bytes 0 accept comment "allow http"
+		ip protocol icmp counter packets 0 bytes 0 accept comment "allow icmp"
+		counter packets 0 bytes 0 comment "other"
+	}
+}
+$ docker exec clab-$STUDENT-l6-shaper1 tc qdisc show dev eth2
+qdisc tbf 8001: root refcnt 5 rate 17Mbit burst 4Kb lat 400ms 
+$ docker exec clab-$STUDENT-l6-fw1 ip -br link show master br0
+eth1@if43        UP             aa:c1:ab:bc:2e:c5 <BROADCAST,MULTICAST,UP,LOWER_UP> 
+eth2@if47        UP             aa:c1:ab:a0:91:0b <BROADCAST,MULTICAST,UP,LOWER_UP> 
+$ docker exec clab-$STUDENT-l6-fw1 ip -br addr show
+lo               UNKNOWN        127.0.0.1/8 ::1/128 
+eth0@if38        UP             10.106.7.6/24 
+br0              UP             fe80::a8c1:abff:fea0:910b/64 
+eth1@if43        UP             fe80::a8c1:abff:febc:2ec5/64 
+eth2@if47        UP             fe80::a8c1:abff:fea0:910b/64 

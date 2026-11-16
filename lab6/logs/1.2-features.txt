@@ -1,0 +1,5 @@
+$ docker exec -t clab-$STUDENT-l6-odl /opt/odl/bin/client -r 30 -d 5 "feature:install odl-openflowplugin-flow-services-rest odl-openflowplugin-app-table-miss-enforcer"
+Logging in as karaf
+$ docker exec -t clab-$STUDENT-l6-odl /opt/odl/bin/client "feature:list -i" | grep -E "openflowplugin-flow-services-rest|table-miss"
+odl-openflowplugin-app-table-miss-enforcer                      | 1.0.0            | x        | Started | odl-openflowplugin-app-table-miss-enforcer                      | OpenDaylight :: Openflow Plugin :: Application -
+odl-openflowplugin-flow-services-rest                           | 1.0.0            | x        | Started | odl-openflowplugin-flow-services-rest                           | OpenDaylight :: Openflow Plugin :: Flow Services

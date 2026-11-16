@@ -1,0 +1,43 @@
+$ ./vnfm.sh instantiate fw2 fw 5 6
+15:14:58 INFO Creating node node=clab-yakovlev-l6-fw2
+15:14:58 INFO Creating node node=clab-yakovlev-l6-sw
+15:14:58 INFO Creating link link="clab-yakovlev-l6-fw2:eth1 -- clab-yakovlev-l6-sw:eth5"
+15:14:58 INFO Created link: clab-yakovlev-l6-fw2:eth1 ▪┄┄▪ clab-yakovlev-l6-sw:eth5
+15:14:58 INFO veth interface successfully created!
+15:14:58 INFO Creating node node=clab-yakovlev-l6-fw2
+15:14:58 INFO Creating node node=clab-yakovlev-l6-sw
+15:14:58 INFO Creating link link="clab-yakovlev-l6-fw2:eth2 -- clab-yakovlev-l6-sw:eth6"
+15:14:58 INFO Created link: clab-yakovlev-l6-fw2:eth2 ▪┄┄▪ clab-yakovlev-l6-sw:eth6
+15:14:58 INFO veth interface successfully created!
+--- fw2
+eth1@if58        UP             aa:c1:ab:d4:2d:35 <BROADCAST,MULTICAST,UP,LOWER_UP> 
+eth2@if60        UP             aa:c1:ab:38:47:0e <BROADCAST,MULTICAST,UP,LOWER_UP> 
+table bridge vnf_fw {
+	chain forward {
+		type filter hook forward priority 0; policy accept;
+		ip protocol tcp tcp dport 8007 counter packets 0 bytes 0 drop comment "block tcp/8007"
+		ip protocol tcp tcp dport 80 counter packets 0 bytes 0 accept comment "allow http"
+		ip protocol icmp counter packets 0 bytes 0 accept comment "allow icmp"
+		counter packets 0 bytes 0 comment "other"
+	}
+}
+qdisc noqueue 0: root refcnt 2 
+VNF fw2 (fw) создан, порты OVS 5/6
+$ ./vnfm.sh list
+NAMES                      STATUS         vnf type
+clab-yakovlev-l6-fw2       Up 1 second    fw
+clab-yakovlev-l6-client1   Up 4 minutes   
+clab-yakovlev-l6-sw        Up 4 minutes   
+clab-yakovlev-l6-server    Up 4 minutes   
+clab-yakovlev-l6-fw1       Up 4 minutes   fw
+clab-yakovlev-l6-client2   Up 4 minutes   
+clab-yakovlev-l6-odl       Up 4 minutes   
+clab-yakovlev-l6-shaper1   Up 4 minutes   shaper
+$ docker exec clab-$STUDENT-l6-sw ovs-ofctl -O OpenFlow13 show br0 | grep -E "^ [56]\("
+ 5(eth5): addr:aa:c1:ab:7c:79:c2
+ 6(eth6): addr:aa:c1:ab:98:30:5a
+$ docker exec clab-$STUDENT-l6-fw2 nft list ruleset | grep counter
+		ip protocol tcp tcp dport 8007 counter packets 0 bytes 0 drop comment "block tcp/8007"
+		ip protocol tcp tcp dport 80 counter packets 0 bytes 0 accept comment "allow http"
+		ip protocol icmp counter packets 0 bytes 0 accept comment "allow icmp"
+		counter packets 1 bytes 72 comment "other"

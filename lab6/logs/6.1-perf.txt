@@ -1,0 +1,119 @@
+$ docker exec clab-$STUDENT-l6-client1 iperf3 -c 10.$N.6.100 -t 10 -R -P 4
+Connecting to host 10.7.6.100, port 5201
+Reverse mode, remote host 10.7.6.100 is sending
+[  5] local 10.7.6.11 port 59552 connected to 10.7.6.100 port 5201
+[  7] local 10.7.6.11 port 59560 connected to 10.7.6.100 port 5201
+[  9] local 10.7.6.11 port 59566 connected to 10.7.6.100 port 5201
+[ 11] local 10.7.6.11 port 59570 connected to 10.7.6.100 port 5201
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-1.00   sec  98.9 MBytes   829 Mbits/sec                  
+[  7]   0.00-1.00   sec  62.1 MBytes   521 Mbits/sec                  
+[  9]   0.00-1.00   sec  54.5 MBytes   457 Mbits/sec                  
+[ 11]   0.00-1.00   sec  37.1 MBytes   311 Mbits/sec                  
+[SUM]   0.00-1.00   sec   253 MBytes  2.12 Gbits/sec                  
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[  5]   1.00-2.00   sec  76.2 MBytes   640 Mbits/sec                  
+[  7]   1.00-2.00   sec  76.0 MBytes   638 Mbits/sec                  
+[  9]   1.00-2.00   sec  21.9 MBytes   184 Mbits/sec                  
+[ 11]   1.00-2.00   sec  60.8 MBytes   510 Mbits/sec                  
+[SUM]   1.00-2.00   sec   235 MBytes  1.97 Gbits/sec                  
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[  5]   2.00-3.00   sec  57.8 MBytes   484 Mbits/sec                  
+[  7]   2.00-3.00   sec   114 MBytes   956 Mbits/sec                  
+[  9]   2.00-3.00   sec  62.4 MBytes   523 Mbits/sec                  
+[ 11]   2.00-3.00   sec  66.8 MBytes   560 Mbits/sec                  
+[SUM]   2.00-3.00   sec   301 MBytes  2.52 Gbits/sec                  
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[  5]   3.00-4.00   sec  36.9 MBytes   309 Mbits/sec                  
+[  7]   3.00-4.00   sec  77.2 MBytes   648 Mbits/sec                  
+[  9]   3.00-4.00   sec   120 MBytes  1.00 Gbits/sec                  
+[ 11]   3.00-4.00   sec  87.5 MBytes   734 Mbits/sec                  
+[SUM]   3.00-4.00   sec   321 MBytes  2.70 Gbits/sec                  
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[  5]   4.00-5.00   sec   130 MBytes  1.09 Gbits/sec                  
+[  7]   4.00-5.00   sec  76.4 MBytes   641 Mbits/sec                  
+[  9]   4.00-5.00   sec  72.9 MBytes   611 Mbits/sec                  
+[ 11]   4.00-5.00   sec  62.2 MBytes   522 Mbits/sec                  
+[SUM]   4.00-5.00   sec   341 MBytes  2.86 Gbits/sec                  
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[  5]   5.00-6.00   sec  63.8 MBytes   535 Mbits/sec                  
+[  7]   5.00-6.00   sec  79.1 MBytes   664 Mbits/sec                  
+[  9]   5.00-6.00   sec  68.6 MBytes   576 Mbits/sec                  
+[ 11]   5.00-6.00   sec   153 MBytes  1.29 Gbits/sec                  
+[SUM]   5.00-6.00   sec   365 MBytes  3.06 Gbits/sec                  
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[  5]   6.00-7.00   sec  93.9 MBytes   788 Mbits/sec                  
+[  7]   6.00-7.00   sec   109 MBytes   912 Mbits/sec                  
+[  9]   6.00-7.00   sec  81.4 MBytes   683 Mbits/sec                  
+[ 11]   6.00-7.00   sec  63.4 MBytes   532 Mbits/sec                  
+[SUM]   6.00-7.00   sec   347 MBytes  2.91 Gbits/sec                  
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[  5]   7.00-8.00   sec  85.2 MBytes   715 Mbits/sec                  
+[  7]   7.00-8.00   sec  55.2 MBytes   463 Mbits/sec                  
+[  9]   7.00-8.00   sec  88.6 MBytes   743 Mbits/sec                  
+[ 11]   7.00-8.00   sec   144 MBytes  1.21 Gbits/sec                  
+[SUM]   7.00-8.00   sec   373 MBytes  3.13 Gbits/sec                  
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[  5]   8.00-9.00   sec  43.2 MBytes   363 Mbits/sec                  
+[  7]   8.00-9.00   sec   101 MBytes   846 Mbits/sec                  
+[  9]   8.00-9.00   sec  35.0 MBytes   294 Mbits/sec                  
+[ 11]   8.00-9.00   sec  62.0 MBytes   520 Mbits/sec                  
+[SUM]   8.00-9.00   sec   241 MBytes  2.02 Gbits/sec                  
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[  5]   9.00-10.00  sec  47.9 MBytes   401 Mbits/sec                  
+[  7]   9.00-10.00  sec  19.5 MBytes   163 Mbits/sec                  
+[  9]   9.00-10.00  sec  38.6 MBytes   324 Mbits/sec                  
+[ 11]   9.00-10.00  sec   125 MBytes  1.05 Gbits/sec                  
+[SUM]   9.00-10.00  sec   231 MBytes  1.94 Gbits/sec                  
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.01  sec   734 MBytes   616 Mbits/sec  1953            sender
+[  5]   0.00-10.00  sec   733 MBytes   615 Mbits/sec                  receiver
+[  7]   0.00-10.01  sec   770 MBytes   646 Mbits/sec  2037            sender
+[  7]   0.00-10.00  sec   769 MBytes   645 Mbits/sec                  receiver
+[  9]   0.00-10.01  sec   644 MBytes   540 Mbits/sec  1839            sender
+[  9]   0.00-10.00  sec   644 MBytes   540 Mbits/sec                  receiver
+[ 11]   0.00-10.01  sec   863 MBytes   724 Mbits/sec  2188            sender
+[ 11]   0.00-10.00  sec   862 MBytes   723 Mbits/sec                  receiver
+[SUM]   0.00-10.01  sec  2.94 GBytes  2.53 Gbits/sec  8017             sender
+[SUM]   0.00-10.00  sec  2.94 GBytes  2.52 Gbits/sec                  receiver
+
+iperf Done.
+$ docker exec clab-$STUDENT-l6-sw sh -c "top -b -n 1 | head -15"
+top - 15:16:21 up 7 min,  0 users,  load average: 2.13, 3.39, 1.91
+Tasks:   6 total,   1 running,   5 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  4.3 us,  4.3 sy,  0.0 ni, 91.5 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st 
+MiB Mem :   7923.5 total,    152.8 free,   4900.0 used,   3045.7 buff/cache     
+MiB Swap:      0.0 total,      0.0 free,      0.0 used.   3023.4 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+      1 root      20   0    2300   1172   1080 S   0.0   0.0   0:00.01 sleep
+      9 root      20   0   18468   9612   7260 S   0.0   0.1   0:00.14 ovsdb-s+
+     12 root      20   0  398004  20676   8008 S   0.0   0.3   0:22.62 ovs-vsw+
+    152 root      20   0    2404   1532   1428 S   0.0   0.0   0:00.01 sh
+    158 root      20   0    7164   4336   2368 R   0.0   0.1   0:00.02 top
+    159 root      20   0    2312   1176   1080 S   0.0   0.0   0:00.00 head
+# дополнительно: top на sw во время нагрузки (iperf3 -R -P 4 в фоне)
+$ docker exec clab-$STUDENT-l6-sw sh -c "top -b -n 1 | head -15"
+top - 15:16:25 up 7 min,  0 users,  load average: 2.04, 3.35, 1.90
+Tasks:   6 total,   2 running,   4 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  9.8 us, 17.1 sy,  0.0 ni, 65.9 id,  0.0 wa,  0.0 hi,  7.3 si,  0.0 st 
+MiB Mem :   7923.5 total,    155.7 free,   4895.7 used,   3047.1 buff/cache     
+MiB Swap:      0.0 total,      0.0 free,      0.0 used.   3027.8 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+     12 root      20   0  398116  20724   8008 R 100.0   0.3   0:26.76 ovs-vsw+
+      1 root      20   0    2300   1172   1080 S   0.0   0.0   0:00.01 sleep
+      9 root      20   0   18468   9612   7260 S   0.0   0.1   0:00.14 ovsdb-s+
+    161 root      20   0    2404   1532   1428 S   0.0   0.0   0:00.00 sh
+    167 root      20   0    7164   4336   2364 R   0.0   0.1   0:00.00 top
+    168 root      20   0    2312   1192   1096 S   0.0   0.0   0:00.00 head
+$ nproc; grep -c ^processor /proc/cpuinfo
+4
+4
+# для сравнения: прямое направление (через шейпер), -P 4
+$ docker exec clab-$STUDENT-l6-client1 iperf3 -c 10.$N.6.100 -t 5 -P 4 | tail -4
+[SUM]   0.00-5.00   sec  12.1 MBytes  20.3 Mbits/sec   20             sender
+[SUM]   0.00-5.38   sec  10.4 MBytes  16.2 Mbits/sec                  receiver
+
+iperf Done.
