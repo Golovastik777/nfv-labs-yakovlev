@@ -11,7 +11,8 @@ vnfd:
     - {id: cp-in,  iface: eth1, role: "сторона клиентов"}
     - {id: cp-out, iface: eth2, role: "сторона сервера"}
   # day-1 конфигурация: ограничение скорости на выходе в сторону сервера.
-  # 17 Мбит/с = 10 + (N mod 10), N = 7; то же значение vnfm.sh вычисляет как $((10 + N % 10))
-  config: "tc qdisc replace dev eth2 root tbf rate 17mbit burst 32kbit latency 400ms"
+  # 17 Мбит/с = 10 + (N mod 10), N = 7; то же значение vnfm.sh вычисляет как $((10 + N % 10)).
+  # burst 16 КБ — не меньше кадра 9514 байт (MTU 9500 у veth containerlab), иначе tbf его отбросит
+  config: "tc qdisc replace dev eth2 root tbf rate 17mbit burst 16kb latency 400ms"
   scaling: {min_instances: 1, max_instances: 1}
   lcm_operations: [instantiate, configure, heal, terminate]

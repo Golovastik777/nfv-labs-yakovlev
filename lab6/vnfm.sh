@@ -21,7 +21,9 @@ configure_vnf() {   # $1 - контейнер, $2 - тип
     ethtool -K eth1 tx off >/dev/null 2>&1; ethtool -K eth2 tx off >/dev/null 2>&1; true'
   case "$2" in
     fw)     envsubst < "$HERE/vnf/fw-rules.nft" | docker exec -i "$1" nft -f - ;;
-    shaper) docker exec "$1" tc qdisc replace dev eth2 root tbf rate "$((10 + N % 10))mbit" burst 32kbit latency 400ms ;;
+    # burst не меньше кадра: containerlab создаёт veth с MTU 9500, а tbf отбрасывает кадры больше ведра
+    # (было burst 32kbit = 4 КБ < 9514 байт — прямой iperf3 давал 0 бит/с)
+    shaper) docker exec "$1" tc qdisc replace dev eth2 root tbf rate "$((10 + N % 10))mbit" burst 16kb latency 400ms ;;
     *)      echo "неизвестный тип VNF: $2" >&2; exit 1 ;;
   esac
   docker exec "$1" sh -c 'echo "--- $(hostname)"; ip -br link show master br0; nft list ruleset 2>/dev/null | head -20; tc qdisc show dev eth2'
