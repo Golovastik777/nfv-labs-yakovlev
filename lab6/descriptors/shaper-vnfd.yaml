@@ -1,0 +1,17 @@
+# Упрощённый дескриптор VNF (по мотивам ETSI NFV SOL001/TOSCA) — VNF «шейпер трафика»
+vnfd:
+  id: vnf-shaper
+  provider: "yakovlev"
+  version: "1.0"
+  description: "Прозрачный шейпер трафика (bridge + tc tbf), вставляется в разрыв"
+  sw_image: lab-tools:1.0          # образ (VDU)
+  vdu:
+    resources: {vcpu: 1, memory_mb: 64}
+  ext_cp:                          # внешние точки подключения
+    - {id: cp-in,  iface: eth1, role: "сторона клиентов"}
+    - {id: cp-out, iface: eth2, role: "сторона сервера"}
+  # day-1 конфигурация: ограничение скорости на выходе в сторону сервера.
+  # 17 Мбит/с = 10 + (N mod 10), N = 7; то же значение vnfm.sh вычисляет как $((10 + N % 10))
+  config: "tc qdisc replace dev eth2 root tbf rate 17mbit burst 32kbit latency 400ms"
+  scaling: {min_instances: 1, max_instances: 1}
+  lcm_operations: [instantiate, configure, heal, terminate]

@@ -1,7 +1,7 @@
 # Упрощённый дескриптор VNF (по мотивам ETSI NFV SOL001/TOSCA) — VNF «межсетевой экран»
 vnfd:
   id: vnf-fw
-  provider: "<фамилия>"
+  provider: "yakovlev"
   version: "1.0"
   description: "Прозрачный межсетевой экран (bridge + nftables), вставляется в разрыв"
   sw_image: lab-tools:1.0          # образ (VDU)
